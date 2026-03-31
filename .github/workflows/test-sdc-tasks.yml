@@ -1,0 +1,59 @@
+name: Test SDC Tasks
+
+on:
+  pull_request_target:
+    types:
+      - labeled
+      - unlabeled
+      - opened
+      - edited
+      - reopened
+
+jobs:
+  test_sdc_tasks:
+
+    name: Test SDC Tasks
+    runs-on: ubuntu-slim
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: checkout pushed PR
+        uses: actions/checkout@v5
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v47.0.5
+      - name: test individual shell tools
+        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh')
+        run: ./test-sdc.sh individual-shell-tools
+        shell: bash
+      - name: test jq
+        if: contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh')
+        run: ./test-sdc.sh jq
+        shell: bash
+      - name: test shell-pipelines
+        if: contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
+        run: ./test-sdc.sh shell-pipelines
+        shell: bash
+      - name: make output comment
+        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
+        env:
+          GH_TOKEN: ${{ secrets.MY_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          gh issue comment $ISSUE_URL --body-FILE testoutput.TXT
+      - name: read test output
+        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
+        id: read-test-output
+        run: |
+          echo 'testoutput<<EOF' >> $GITHUB_OUTPUT
+          cat testoutput.txt >> $GITHUB_OUTPUT
+          echo EOF >> $GITHUB_OUTPUT
+      - name: add appropriate labels
+        if: contains(steps.read-test-output.outputs.testoutput, 'complete!')
+        env:
+          GH_TOKEN: ${{ secrets.MY_TOKEN }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+        run: |
+          gh issue edit $ISSUE_URL --add-label "Complete"
+          gh issue edit $ISSUE_URL --remove-label "Needs Review"
