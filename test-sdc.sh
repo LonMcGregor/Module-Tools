@@ -23,7 +23,6 @@ if [[ "$1" == "individual-shell-tools" ]]; then
 			else
 				if [[ "$exercise" == *"stretch"* ]]; then
 					# echo "Stretch task $directory$exercise failing, you can ignore this if you did not attempt. If you didnt, please have the volunteer check this."
-					echo "" >> ../../testoutput.txt
 					total=$(($total-1))
 				else
 					echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
@@ -35,8 +34,14 @@ if [[ "$1" == "individual-shell-tools" ]]; then
 	cd ..
 	rm test.tmp
 	echo "You passed $pass/$total tasks." >> testoutput.txt
+	if [ -v GITHUB_OUTPUT ]; then
+		echo "attempted=y" >> "$GITHUB_OUTPUT"
+	fi
 	if [ $pass -ge $total ]; then
 		echo "This task is complete!" >> testoutput.txt
+		if [ -v GITHUB_OUTPUT ]; then
+			echo "complete=y" >> "$GITHUB_OUTPUT"
+		fi
 	fi
 	cat testoutput.txt
 elif [[ "$1" == "shell-pipelines" ]]; then
@@ -60,8 +65,14 @@ elif [[ "$1" == "shell-pipelines" ]]; then
 	cd ..
 	rm test.tmp
 	echo "You passed $pass/$total tasks." >> testoutput.txt
+	if [ -v GITHUB_OUTPUT ]; then
+		echo "attempted=y" >> "$GITHUB_OUTPUT"
+	fi
 	if [ $pass -eq $total ]; then
 		echo "This task is complete!" >> testoutput.txt
+		if [ -v GITHUB_OUTPUT ]; then
+			echo "complete=y" >> "$GITHUB_OUTPUT"
+		fi
 	fi
 	cat testoutput.txt
 elif [[ "$1" == "jq" ]]; then
@@ -81,8 +92,14 @@ elif [[ "$1" == "jq" ]]; then
 	cd ..
 	rm test.tmp
 	echo "You passed $pass/$total tasks." >> testoutput.txt
+	if [ -v GITHUB_OUTPUT ]; then
+		echo "attempted=y" >> "$GITHUB_OUTPUT"
+	fi
 	if [ $pass -eq $total ]; then
 		echo "This task is complete!" >> testoutput.txt
+		if [ -v GITHUB_OUTPUT ]; then
+			echo "complete=y" >> "$GITHUB_OUTPUT"
+		fi
 	fi
 	cat testoutput.txt
 else

@@ -8,6 +8,7 @@ on:
       - opened
       - edited
       - reopened
+      - synchronize
 
 jobs:
   test_sdc_tasks:
@@ -24,33 +25,29 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v47.0.5
       - name: test individual shell tools
+        id: test-individual-shell-tools
         if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh')
         run: ./test-sdc.sh individual-shell-tools
         shell: bash
       - name: test jq
+        id: test-jq
         if: contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh')
         run: ./test-sdc.sh jq
         shell: bash
       - name: test shell-pipelines
+        id: test-shell-pipelines
         if: contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
         run: ./test-sdc.sh shell-pipelines
         shell: bash
       - name: make output comment
-        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
+        if: steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y'
         env:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
         run: |
           gh issue comment $ISSUE_URL --body-FILE testoutput.TXT
-      - name: read test output
-        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh') || contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
-        id: read-test-output
-        run: |
-          echo 'testoutput<<EOF' >> $GITHUB_OUTPUT
-          cat testoutput.txt >> $GITHUB_OUTPUT
-          echo EOF >> $GITHUB_OUTPUT
       - name: add appropriate labels
-        if: contains(steps.read-test-output.outputs.testoutput, 'complete!')
+        if: steps.test-individual-shell-tools.outputs.complete == 'y' || steps.test-jq.outputs.complete == 'y' || steps.test-shell-pipelines.outputs.complete == 'y'
         env:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
