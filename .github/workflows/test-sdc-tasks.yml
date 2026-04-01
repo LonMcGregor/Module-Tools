@@ -19,11 +19,17 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: checkout pushed PR
+      - name: checkout base branch
         uses: actions/checkout@v5
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v47.0.5
+      - name: checkout changed files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_NUM: ${{ github.event.pr.number }}
+        run: |
+          gh pr checkout $PR_NUM
       - name: test individual shell tools
         id: test-individual-shell-tools
         if: contains(steps.changed-files.outputs.modified_files, 'individual-shell-tools/')
