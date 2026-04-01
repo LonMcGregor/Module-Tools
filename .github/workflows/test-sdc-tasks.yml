@@ -45,7 +45,7 @@ jobs:
           GH_TOKEN: ${{ secrets.MY_TOKEN }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
         run: |
-          gh issue comment $ISSUE_URL --body-ficle testoutput.txtc
+          gh issue comment $ISSUE_URL --body-file testoutput.txt
       - name: add appropriate labels
         if: steps.test-individual-shell-tools.outputs.complete == 'y' || steps.test-jq.outputs.complete == 'y' || steps.test-shell-pipelines.outputs.complete == 'y'
         env:
