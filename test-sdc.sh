@@ -3,7 +3,7 @@
 # You can run this file using ./test-sdc.sh task-directory-name to check your output
 # You can use it with the individual-shell-tools, jq, and shell-pipelines tasks
 
-rm testoutput.txt
+echo "Results of test" > testoutput.txt
 if [[ "$1" == "individual-shell-tools" ]]; then
 	cd individual-shell-tools
 	pass=0
