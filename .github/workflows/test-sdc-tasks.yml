@@ -24,6 +24,13 @@ jobs:
       - name: Get changed files
         id: changed-files
         uses: tj-actions/changed-files@v47.0.5
+      - name: List all changed files
+        env:
+          ALL_CHANGED_FILES: ${{ steps.changed-files.outputs.all_changed_files }}
+        run: |
+          for file in ${ALL_CHANGED_FILES}; do
+            echo "$file was changed"
+          done
       - name: test individual shell tools
         id: test-individual-shell-tools
         if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh')
