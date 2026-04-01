@@ -17,7 +17,6 @@ if [[ "$1" == "individual-shell-tools" ]]; then
 		for exercise in *.sh; do
 			total=$(($total+1))
 			./$exercise > ../../test.tmp
-			./$exercise >> ../../testoutput.txt
 			cmp ../../test.tmp ../../expect/individual-shell-tools/$directory$exercise --quiet
 			if [ $? -eq 0 ]; then
 				pass=$(($pass+1))
