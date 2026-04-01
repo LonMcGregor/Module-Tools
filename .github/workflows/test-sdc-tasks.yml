@@ -54,3 +54,7 @@ jobs:
         run: |
           gh pr edit $ISSUE_URL --add-label "Complete"
           gh pr edit $ISSUE_URL --remove-label "Needs Review"
+      - name: fail if not complete
+        if: (steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y') && !(steps.test-individual-shell-tools.outputs.complete == 'y' || steps.test-jq.outputs.complete == 'y' || steps.test-shell-pipelines.outputs.complete == 'y')
+        run: |
+          exit -1
