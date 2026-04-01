@@ -27,7 +27,7 @@ jobs:
       - name: checkout changed files
         env:
           GH_TOKEN: ${{ github.token }}
-          PR_NUM: ${{ github.event.pr.number }}
+          PR_NUM: ${{ github.event.pull_request.number }}
         run: |
           gh pr checkout $PR_NUM
       - name: test individual shell tools
