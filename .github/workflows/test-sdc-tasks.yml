@@ -33,17 +33,17 @@ jobs:
           done
       - name: test individual shell tools
         id: test-individual-shell-tools
-        if: contains(steps.changed-files.outputs.all_changed_files, 'individual-shell-tools/awk/script-01.sh')
+        if: contains(steps.changed-files.outputs.modified_files, 'individual-shell-tools/awk/script-01.sh')
         run: ./test-sdc.sh individual-shell-tools
         shell: bash
       - name: test jq
         id: test-jq
-        if: contains(steps.changed-files.outputs.all_changed_files, 'jq/script-01.sh')
+        if: contains(steps.changed-files.outputs.modified_files, 'jq/script-01.sh')
         run: ./test-sdc.sh jq
         shell: bash
       - name: test shell-pipelines
         id: test-shell-pipelines
-        if: contains(steps.changed-files.outputs.all_changed_files, 'shell-pipelines/ls-grep/script-01.sh')
+        if: contains(steps.changed-files.outputs.modified_files, 'shell-pipelines/ls-grep/script-01.sh')
         run: ./test-sdc.sh shell-pipelines
         shell: bash
       - name: make output comment
