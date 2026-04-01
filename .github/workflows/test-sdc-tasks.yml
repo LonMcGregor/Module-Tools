@@ -1,12 +1,10 @@
 name: Test SDC Tasks
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - labeled
-      - unlabeled
       - opened
-      - edited
       - reopened
       - synchronize
 
@@ -19,7 +17,7 @@ jobs:
       pull-requests: write
 
     steps:
-      - name: checkout pushed PR
+      - name: checkout base branch
         uses: actions/checkout@v5
       - name: Get changed files
         id: changed-files
@@ -42,15 +40,19 @@ jobs:
       - name: make output comment
         if: steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y'
         env:
-          GH_TOKEN: ${{ secrets.MY_TOKEN }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          gh issue comment $ISSUE_URL --body-file testoutput.txt
+          gh pr comment $ISSUE_URL --body-file testoutput.txt
       - name: add appropriate labels
         if: steps.test-individual-shell-tools.outputs.complete == 'y' || steps.test-jq.outputs.complete == 'y' || steps.test-shell-pipelines.outputs.complete == 'y'
         env:
-          GH_TOKEN: ${{ secrets.MY_TOKEN }}
-          ISSUE_URL: ${{ github.event.issue.html_url }}
+          GH_TOKEN: ${{ github.token }}
+          ISSUE_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          gh issue edit $ISSUE_URL --add-label "Complete"
-          gh issue edit $ISSUE_URL --remove-label "Needs Review"
+          gh pr edit $ISSUE_URL --add-label "Complete"
+          gh pr edit $ISSUE_URL --remove-label "Needs Review"
+      - name: fail if not complete
+        if: (steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y') && !(steps.test-individual-shell-tools.outputs.complete == 'y' || steps.test-jq.outputs.complete == 'y' || steps.test-shell-pipelines.outputs.complete == 'y')
+        run: |
+          exit -1
