@@ -102,6 +102,35 @@ elif [[ "$1" == "jq" ]]; then
 		fi
 	fi
 	cat testoutput.txt
+elif [[ "$1" == "number-systems" ]]; then
+	pass=0
+	for question in $(seq 1 17); do
+		echo Q$question
+		answer=$(jq ".answers[$question]" expect/number-systems/README.md)
+		echo answer $answer
+		if [[ "$answer" == "VOLUNTEER_CHECK" ]]; then
+			continue
+		fi
+		nextq=$(($question+1))
+		Q_START=$(grep -n "Q$question:" number-systems/README.md | cut -d: -f1)
+		ANS_START=$(($Q_START + 1))
+		NEXT_Q_START=$(grep -n "Q$nextq:" number-systems/README.md | cut -d: -f1)
+		ANS_END=$(($NEXT_Q_START - 1))
+		sed -n "$ANS_START,${ANS_END}p;${NEXT_Q_START}q" number-systems/README.md > answerfile
+		grep $answer answerfile
+		if [ $? -eq 0 ]; then
+			pass=$(($pass+1))
+		else
+			echo "Please try Q$question again, or have the volunteer check this." >> testoutput.txt
+		fi
+		rm answerfile
+	done
+	echo "You passed $pass/20 tasks." >> testoutput.txt
+	if [ -v GITHUB_OUTPUT ]; then
+		echo "attempted=y" >> "$GITHUB_OUTPUT"
+	fi
+	echo "Please now let a volunteer check the answers for questions 11, 18, 19, and 20."
+	cat testoutput.txt
 else
 	echo "Please run this with a valid test directory name as argument"
 fi
