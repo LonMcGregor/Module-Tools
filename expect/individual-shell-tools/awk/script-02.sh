@@ -4,9 +4,3 @@ Mehmet Birmingham
 Leila London
 Piotr Glasgow
 Chandra Birmingham
-Ahmed London
-Basia London
-Mehmet Birmingham
-Leila London
-Piotr Glasgow
-Chandra Birmingham
