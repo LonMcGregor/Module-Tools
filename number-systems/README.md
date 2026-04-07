@@ -40,7 +40,7 @@ Answer:
 Q12: Convert the decimal number 14 to hex.
 Answer: 
  
-Q13:Convert the decimal number 386 to hex.
+Q13: Convert the decimal number 386 to hex.
 Answer: 
 
 Q14: Convert the hex number 386 to decimal.
