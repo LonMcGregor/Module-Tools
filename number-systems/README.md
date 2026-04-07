@@ -11,10 +11,10 @@ Q2: Convert the binary number 101101 to decimal:
 Answer: 
 
 Q3: Which is larger: 1000 or 0111?
-Answer: 1000 is bigger
+Answer: 
 
 Q4: Which is larger: 00100 or 01011?
-Answer: the bigger number is 01011 
+Answer: 
 
 Q5: What is 10101 + 01010?
 Answer: 
@@ -35,10 +35,10 @@ Q10: How many bits would you need in order to store the numbers between 0 and 10
 Answer: 
 
 Q11: How can you test if a binary number is a power of two (e.g. 1, 2, 4, 8, 16, ...)?
-Answer: it has a single 1 bit set
+Answer: 
 
 Q12: Convert the decimal number 14 to hex.
-Answer: The answer is E
+Answer: 
  
 Q13: Convert the decimal number 386 to hex.
 Answer: 
@@ -47,7 +47,7 @@ Q14: Convert the hex number 386 to decimal.
 Answer: 
 
 Q15: Convert the hex number B to decimal.
-Answer: the answer is 11
+Answer: 
 
 Q16: If reading the byte 0x21 as a number, what decimal number would it mean?
 Answer: 
