@@ -39,8 +39,13 @@ jobs:
         if: contains(steps.changed-files.outputs.modified_files, 'shell-pipelines/')
         run: ./test-sdc.sh shell-pipelines
         shell: bash
+      - name: test number-systems
+        id: test-number-systems
+        if: contains(steps.changed-files.outputs.modified_files, 'number-systems/')
+        run: ./test-sdc.sh number-systems
+        shell: bash
       - name: make output comment
-        if: steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y'
+        if: steps.test-individual-shell-tools.outputs.attempted == 'y' || steps.test-jq.outputs.attempted == 'y' || steps.test-shell-pipelines.outputs.attempted == 'y' || steps.test-number-systems.outputs.attempted == 'y'
         env:
           GH_TOKEN: ${{ github.token }}
           ISSUE_URL: ${{ github.event.pull_request.html_url }}
