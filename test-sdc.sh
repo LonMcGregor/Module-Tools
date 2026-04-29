@@ -87,7 +87,7 @@ elif [[ "$1" == "jq" ]]; then
 		if [ $? -eq 0 ]; then
 			pass=$(($pass+1))
 		else
-			echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
+			echo "Failed $exercise, please check" >> ../testoutput.txt
 		fi
 	done
 	cd ..
