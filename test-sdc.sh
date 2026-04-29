@@ -105,17 +105,14 @@ elif [[ "$1" == "jq" ]]; then
 	cat testoutput.txt
 elif [[ "$1" == "number-systems" ]]; then
 	pass=0
-	for question in $(seq 1 17); do
-		answer=$(jq -r ".answers[$question]" expect/number-systems/README.json)
-		if [[ "$answer" == "VOLUNTEER_CHECK" ]]; then
-			continue
-		fi
+	for question in $(seq 1 15); do
+		answer=$(jq -r ".answers[$question]" expect/number-systems/Part-1.json)
 		nextq=$(($question+1))
-		Q_START=$(grep -n "Q$question:" number-systems/README.md | cut -d: -f1)
+		Q_START=$(grep -n "Q$question:" number-systems/Part-1.md | cut -d: -f1)
 		ANS_START=$(($Q_START + 1))
-		NEXT_Q_START=$(grep -n "Q$nextq:" number-systems/README.md | cut -d: -f1)
+		NEXT_Q_START=$(grep -n "Q$nextq:" number-systems/Part-1.md | cut -d: -f1)
 		ANS_END=$(($NEXT_Q_START - 1))
-		sed -n "$ANS_START,${ANS_END}p;${NEXT_Q_START}q" number-systems/README.md | cut -d: -f2- > answerfile
+		sed -n "$ANS_START,${ANS_END}p;${NEXT_Q_START}q" number-systems/Part-1.md | cut -d: -f2- > answerfile
 		grep --quiet -iE $answer answerfile
 		if [ $? -eq 0 ]; then
 			pass=$(($pass+1))
@@ -124,11 +121,11 @@ elif [[ "$1" == "number-systems" ]]; then
 		fi
 		rm answerfile
 	done
-	echo "You passed $pass/20 tasks." >> testoutput.txt
+	echo "You passed $pass/15 tasks in part 1." >> testoutput.txt
 	if [ -v GITHUB_OUTPUT ]; then
 		echo "attempted=y" >> "$GITHUB_OUTPUT"
 	fi
-	echo "Please let a volunteer check the answers for questions 11, 17, 18, 19, and 20."
+	echo "Please let a volunteer check the answers for part 2." >> testoutput.txt
 	cat testoutput.txt
 else
 	echo "Please run this with a valid test directory name as argument"
