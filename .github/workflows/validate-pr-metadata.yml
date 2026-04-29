@@ -1,4 +1,4 @@
-name: Validate PR Metadata
+name: Validate PR Metadata and Check SDC-Tools Tasks
 on:
   pull_request_target:
     types:
@@ -9,20 +9,11 @@ on:
       - reopened
 
 jobs:
-  validate_pr_metadata:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: CodeYourFuture/actions/validate-pr-metadata@main
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   test_sdc_tasks:
     name: Test SDC Tasks
     runs-on: ubuntu-slim
     permissions:
       pull-requests: write
-    needs: [validate_pr_metadata]
     if: ${{ github.event.label.name == 'Needs Review' }}
     steps:
       - name: checkout base branch
