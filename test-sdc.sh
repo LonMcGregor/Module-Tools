@@ -26,6 +26,7 @@ if [[ "$1" == "individual-shell-tools" ]]; then
 					total=$(($total-1))
 				else
 					echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
+					echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 				fi
 			fi
 		done
@@ -58,6 +59,7 @@ elif [[ "$1" == "shell-pipelines" ]]; then
 				pass=$(($pass+1))
 			else
 				echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
+				echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 			fi
 		done
 		cd ..
@@ -87,6 +89,7 @@ elif [[ "$1" == "jq" ]]; then
 			pass=$(($pass+1))
 		else
 			echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
+			echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 		fi
 	done
 	cd ..
@@ -120,6 +123,7 @@ elif [[ "$1" == "number-systems" ]]; then
 			pass=$(($pass+1))
 		else
 			echo "Please try Q$question again, or have the volunteer check this." >> testoutput.txt
+			echo "Q$question incorrect, please check" >> testoutput.txt
 		fi
 		rm answerfile
 	done
