@@ -1,9 +1,7 @@
 # This test file will be automatically run when you submit a pull request
 # You should not modify this file
 # You can run this file using ./test-sdc.sh task-directory-name to check your output
-# You can use it with the individual-shell-tools, jq, and shell-pipelines tasks
 
-echo "Results of test" > testoutput.txt
 echo "<!--CYFTT tag: sdc-test-results-->" > testoutput.txt
 echo "Results of test" >> testoutput.txt
 
@@ -24,11 +22,10 @@ if [[ "$1" == "individual-shell-tools" ]]; then
 			if [ $? -eq 0 ]; then
 				pass=$(($pass+1))
 			else
-				if [[ "$exercise" == *"stretch"* ]]; then
-					# echo "Stretch task $directory$exercise failing, you can ignore this if you did not attempt. If you didnt, please have the volunteer check this."
+				if [[ "$exercise" == *"stretch"* && $(stat -c%s ../../test.tmp) == "0" ]]; then
+					# Stretch task not attempted, ignoring"
 					total=$(($total-1))
 				else
-					echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
 					echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 				fi
 			fi
@@ -61,7 +58,6 @@ elif [[ "$1" == "shell-pipelines" ]]; then
 			if [ $? -eq 0 ]; then
 				pass=$(($pass+1))
 			else
-				echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
 				echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 			fi
 		done
@@ -91,7 +87,6 @@ elif [[ "$1" == "jq" ]]; then
 		if [ $? -eq 0 ]; then
 			pass=$(($pass+1))
 		else
-			echo "Failed $directory$exercise, please either attempt again or have the volunteer check this." >> ../../testoutput.txt
 			echo "Failed $directory$exercise, please check" >> ../../testoutput.txt
 		fi
 	done
@@ -125,7 +120,6 @@ elif [[ "$1" == "number-systems" ]]; then
 		if [ $? -eq 0 ]; then
 			pass=$(($pass+1))
 		else
-			echo "Please try Q$question again, or have the volunteer check this." >> testoutput.txt
 			echo "Q$question incorrect, please check" >> testoutput.txt
 		fi
 		rm answerfile
